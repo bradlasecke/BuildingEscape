@@ -12,6 +12,8 @@ BuildingEscape/Content/StarterContent
 #*.VC.db
 
 
-##########################
-# Unreal Generated Files #
-##########################
+#########################
+# XCode Generated Files #
+#########################
+**/xcuserdata
+BuildingEscape.xcworkspace
