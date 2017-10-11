@@ -24,6 +24,9 @@ protected:
 
 public:	
 	// Called every frame
+    void SetDoorRotation(float degrees);
+    bool isOpen();
+    bool isClosed();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
@@ -33,4 +36,14 @@ private:
     UPROPERTY(EditAnywhere)
     ATriggerVolume* PressurePlate;
 	
+//    UPROPERTY(EditAnywhere)
+    AActor* ActorThatOpens;
+    
+    
+    UPROPERTY(EditAnywhere)
+    int openRate = 30; //degrees per second
+    
+    static const int openPos = 250;
+    static const int closedPos = 180;
+    float currentPos = 180.f;
 };

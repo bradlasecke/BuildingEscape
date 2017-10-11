@@ -2,6 +2,7 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 
 
 // Sets default values for this component's properties
@@ -21,13 +22,43 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-    AActor* actor = GetOwner();
-    FRotator rot = FRotator(0.0f, 230.0f, 0.0f);
-    actor->SetActorRotation(rot);
-	
-//    UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *(actor->GetName()), rot.ToString());
+    
+    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
+//void UOpenDoor::OpenDoor() {
+//    AActor* actor = GetOwner();
+//    FRotator rot = FRotator(0.0f, openPos, 0.0f);
+//    actor->SetActorRotation(rot);
+//}
+//
+//void UOpenDoor::CloseDoor() {
+//    AActor* actor = GetOwner();
+//    FRotator rot = FRotator(0.0f, closedPos, 0.0f);
+//    actor->SetActorRotation(rot);
+//}
+
+void UOpenDoor::SetDoorRotation(float degrees) {
+    if(degrees >= float(openPos)) {
+        degrees = float(openPos);
+    }
+    else if(degrees <= float(closedPos)) {
+        degrees = float(closedPos);
+    }
+    
+    AActor* actor = GetOwner();
+    FRotator rot = FRotator(0.0f, degrees, 0.0f);
+    actor->SetActorRotation(rot);
+    currentPos = degrees;
+}
+
+bool UOpenDoor::isOpen() {
+    return currentPos >= float(openPos);
+}
+
+bool UOpenDoor::isClosed() {
+    return currentPos <= float(closedPos);
+}
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -35,5 +66,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+    
+    bool shouldOpen = PressurePlate->IsOverlappingActor(ActorThatOpens);
+    if(!(isOpen() && shouldOpen) || !(isClosed() && !shouldOpen)) {
+        float rotDiff = abs(openRate*DeltaTime);
+        if(!shouldOpen) { rotDiff = -rotDiff; }
+        
+        SetDoorRotation(currentPos+rotDiff);
+    }
 }
 
