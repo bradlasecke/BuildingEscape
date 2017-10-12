@@ -24,8 +24,6 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
-//    UE_LOG(LogTemp, Warning, TEXT("Grabber.cpp"));
     
     AssignComponents();
 }
@@ -33,10 +31,7 @@ void UGrabber::BeginPlay()
 void UGrabber::AssignComponents() {
     /// Look for attached Physics handle - only appears at runtime
     physHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-    if(physHandle) {
-        
-    }
-    else {
+    if(physHandle == nullptr) {
         UE_LOG(LogTemp, Error, TEXT("%s does not have a UPhysicsHandleComponent, cannot grab objects"), *(GetOwner()->GetName()));
     }
     
@@ -66,7 +61,7 @@ void UGrabber::Grab() {
     auto compToGrab = hit.GetComponent();
     
     if(hitActor) {
-        UE_LOG(LogTemp, Warning, TEXT("Grabbed %s"), *(hitActor->GetName()));
+//        UE_LOG(LogTemp, Warning, TEXT("Grabbed %s"), *(hitActor->GetName()));
         physHandle->GrabComponentAtLocationWithRotation(compToGrab,
                                                         NAME_None,
                                                         hitActor->GetActorLocation(),
@@ -112,9 +107,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-    
-    
     /// Draw a red trace to see where the player is pointing
 //    DrawDebugLine(GetWorld(), viewpoint, //start
 //                  lineTraceEnd, //end

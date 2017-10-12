@@ -37,9 +37,11 @@ private:
     ATriggerVolume* PressurePlate;
 	
 //    UPROPERTY(EditAnywhere)
-    AActor* ActorThatOpens;
+//    AActor* ActorThatOpens;
     AActor* self; //the door
     
+    UPROPERTY(EditAnywhere)
+    float triggerMass = 75.f;
     
     UPROPERTY(EditAnywhere)
     int openRate = 30; //degrees per second
@@ -47,4 +49,6 @@ private:
     static const int openPos = 270;
     static const int closedPos = 180;
     float currentPos = 180.f;
+    
+    float GetMassOfActorsOnPlate();
 };
