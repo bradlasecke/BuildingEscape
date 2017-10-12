@@ -9,6 +9,8 @@
 #include "OpenDoor.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent); //to make this file "BlueprintAssignable
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
 {
@@ -22,33 +24,27 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-    void SetDoorRotation(float degrees);
-    bool isOpen();
-    bool isClosed();
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-private:
-    UPROPERTY(VisibleAnywhere)
-    float openAngle = 90.f;
+public:
+//    void SetDoorRotation(float degrees);
+//    bool isOpen();
+//    bool isClosed();
     
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+    
+    UPROPERTY(BlueprintAssignable)
+    FDoorEvent onOpen;
+    
+    UPROPERTY(BlueprintAssignable)
+    FDoorEvent onClose;
+    
+private:
     UPROPERTY(EditAnywhere)
-    ATriggerVolume* PressurePlate;
+    ATriggerVolume* PressurePlate = nullptr;
 	
-//    UPROPERTY(EditAnywhere)
-//    AActor* ActorThatOpens;
-    AActor* self; //the door
+    AActor* self = nullptr; //the door
     
     UPROPERTY(EditAnywhere)
     float triggerMass = 75.f;
-    
-    UPROPERTY(EditAnywhere)
-    int openRate = 30; //degrees per second
-    
-    static const int openPos = 270;
-    static const int closedPos = 180;
-    float currentPos = 180.f;
     
     float GetMassOfActorsOnPlate();
 };

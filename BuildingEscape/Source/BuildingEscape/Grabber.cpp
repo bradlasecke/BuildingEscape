@@ -60,7 +60,7 @@ void UGrabber::Grab() {
     auto hitActor = hit.GetActor();
     auto compToGrab = hit.GetComponent();
     
-    if(hitActor) {
+    if(hitActor && physHandle) {
 //        UE_LOG(LogTemp, Warning, TEXT("Grabbed %s"), *(hitActor->GetName()));
         physHandle->GrabComponentAtLocationWithRotation(compToGrab,
                                                         NAME_None,
@@ -71,7 +71,9 @@ void UGrabber::Grab() {
 
 void UGrabber::Release() {
 //    UE_LOG(LogTemp, Warning, TEXT("Releasing!"));
-    physHandle->ReleaseComponent();
+    if(physHandle) {
+        physHandle->ReleaseComponent();
+    }
 }
 
 FVector UGrabber::getLineTraceEnd() {
@@ -117,7 +119,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 //                  10.f); //thickness of line
     
     //if attached physics body, move physics body with user movement
-    if(physHandle->GrabbedComponent) {
+    if(physHandle && physHandle->GrabbedComponent) {
         physHandle->SetTargetLocation(getLineTraceEnd());
     }
 }

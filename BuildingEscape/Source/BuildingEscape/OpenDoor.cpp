@@ -26,6 +26,10 @@ void UOpenDoor::BeginPlay()
     
     self = GetOwner();
 //    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+    
+    if(PressurePlate == nullptr) {
+        UE_LOG(LogTemp, Error, TEXT("%s does not have a connected PressurePlate, cannot open door"), *(GetOwner()->GetName()));
+    }
 }
 
 //void UOpenDoor::OpenDoor() {
@@ -40,33 +44,36 @@ void UOpenDoor::BeginPlay()
 //    actor->SetActorRotation(rot);
 //}
 
-void UOpenDoor::SetDoorRotation(float degrees) {
-    if(degrees >= float(openPos)) {
-        degrees = float(openPos);
-    }
-    else if(degrees <= float(closedPos)) {
-        degrees = float(closedPos);
-    }
-    
-    FRotator rot = FRotator(0.0f, degrees, 0.0f);
-    self->SetActorRotation(rot);
-    currentPos = degrees;
-}
-
-bool UOpenDoor::isOpen() {
-    return currentPos >= float(openPos);
-}
-
-bool UOpenDoor::isClosed() {
-    return currentPos <= float(closedPos);
-}
+//void UOpenDoor::SetDoorRotation(float degrees) {
+//    if(degrees >= float(openPos)) {
+//        degrees = float(openPos);
+//    }
+//    else if(degrees <= float(closedPos)) {
+//        degrees = float(closedPos);
+//    }
+//
+//    FRotator rot = FRotator(0.0f, degrees, 0.0f);
+//    self->SetActorRotation(rot);
+//    currentPos = degrees;
+//}
+//
+//bool UOpenDoor::isOpen() {
+//    return currentPos >= float(openPos);
+//}
+//
+//bool UOpenDoor::isClosed() {
+//    return currentPos <= float(closedPos);
+//}
 
 float UOpenDoor::GetMassOfActorsOnPlate() {
     float m = 0.f;
+
+    if(PressurePlate == nullptr) {
+        return m;
+    }
     
     //find all actors overlapping with this and add up their masses
     TArray<AActor*> actors;
-//    pressurePlate->GetOverlappingActors(actors)
     PressurePlate->GetOverlappingActors(actors);
     
     for(const auto* item : actors) {
@@ -85,12 +92,19 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	// ...
     
-    bool shouldOpen = GetMassOfActorsOnPlate() > triggerMass;
-    if(!(isOpen() && shouldOpen) || !(isClosed() && !shouldOpen)) {
-        float rotDiff = abs(openRate*DeltaTime);
-        if(!shouldOpen) { rotDiff = -rotDiff; }
-
-        SetDoorRotation(currentPos+rotDiff);
+//    bool shouldOpen = GetMassOfActorsOnPlate() > triggerMass;
+//    if(!(isOpen() && shouldOpen) || !(isClosed() && !shouldOpen)) {
+//        float rotDiff = abs(openRate*DeltaTime);
+//        if(!shouldOpen) { rotDiff = -rotDiff; }
+//
+//        SetDoorRotation(currentPos+rotDiff);
+//    }
+    
+    if(GetMassOfActorsOnPlate() > triggerMass) {
+        onOpen.Broadcast();
+    }
+    else {
+        onClose.Broadcast();
     }
 }
 
