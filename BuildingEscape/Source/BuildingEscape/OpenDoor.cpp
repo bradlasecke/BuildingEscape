@@ -23,6 +23,7 @@ void UOpenDoor::BeginPlay()
 
 	// ...
     
+    self = GetOwner();
     ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
@@ -46,9 +47,8 @@ void UOpenDoor::SetDoorRotation(float degrees) {
         degrees = float(closedPos);
     }
     
-    AActor* actor = GetOwner();
     FRotator rot = FRotator(0.0f, degrees, 0.0f);
-    actor->SetActorRotation(rot);
+    self->SetActorRotation(rot);
     currentPos = degrees;
 }
 

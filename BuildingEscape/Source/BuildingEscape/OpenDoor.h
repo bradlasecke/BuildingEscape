@@ -38,12 +38,13 @@ private:
 	
 //    UPROPERTY(EditAnywhere)
     AActor* ActorThatOpens;
+    AActor* self; //the door
     
     
     UPROPERTY(EditAnywhere)
     int openRate = 30; //degrees per second
     
-    static const int openPos = 250;
+    static const int openPos = 270;
     static const int closedPos = 180;
     float currentPos = 180.f;
 };

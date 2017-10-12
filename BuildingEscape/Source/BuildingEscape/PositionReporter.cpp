@@ -23,9 +23,9 @@ void UPositionReporter::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-    FString name = GetOwner()->GetName();
-    FString pos = GetOwner()->GetTransform().GetLocation().ToString();
-    UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *name, *pos);
+//    FString name = GetOwner()->GetName();
+//    FString pos = GetOwner()->GetTransform().GetLocation().ToString();
+//    UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *name, *pos);
 }
 
 
